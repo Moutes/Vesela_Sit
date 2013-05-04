@@ -6,7 +6,7 @@ from preprocess import create_valid_train_preproc_sets, normalize_sets
 
 lamb = 1
 odchylka = 1
-topologie = [2800,280,28,8,1]
+topologie = [2800,400,40,8,1]
 
 #training_set = [([1,2,3],[0]),([2,2,3],[0]),([1,1,1],[0]),([3,1,1],[1])]
 training_set = []
