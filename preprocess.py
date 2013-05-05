@@ -56,24 +56,56 @@ def preproces_set(store_set, path, output, columns, rows):
 		#spocitam uhel o ktery je papir otocen (pravdepodobne docela maly)
 		angle = math.floor(math.atan(((p1y-p2y)*1.0)/((p1x-p2x)*1.0))*180/math.pi)
 		obrazek.rotate(-angle)					#minusem si nejsem jist
-			
-#------------------------------------------------------------------------------ 
-		#--------------------------------------------- #prvni vertikalni
-		#------------------------------------------------------- p1x = 2
-		#------------------------------------------------------- p1y = 2
-		#---------------------------------------- (r,g,b) = pix[p1x,p1y]
-		#---------------------------------- while(r<(g+b)*citlivost+10):
-			#-------------------------------------------------- p1x += 1
-			#------------------------------------ (r,g,b) = pix[p1x,p1y]
-#------------------------------------------------------------------------------ 
-		#------------------------------------------------------- p2x = 2
-		#----------------------------------------------------- p2y = y-2
-		#---------------------------------------- (r,g,b) = pix[p2x,p2y]
-		#---------------------------------- while(r<(g+b)*citlivost+10):
-			#-------------------------------------------------- p2x += 1
-			#------------------------------------ (r,g,b) = pix[p2x,p2y]
+		
+		#znovu prvni horizontalni cara, ale tentokrat jen na jedne strane:
+		p1x = 2
+		p1y = 2
+		(r,g,b) = pix[p1x,p1y]
+		while(r<(g+b)*citlivost+10):
+			p1y += 1
+			(r,g,b) = pix[p1x,p1y]
+		horni_bod = p1y
 
-		#store_set.append(cut(obrazek, pix, (1,1), obrazek.size, [output]))
+		#prvni vertikalni
+		p1x = 2
+		p1y = 2
+		(r,g,b) = pix[p1x,p1y]
+		while(r<(g+b)*citlivost+10):
+			p1x += 1
+			(r,g,b) = pix[p1x,p1y]
+		levy_bod = p1x
+
+		#posledni horizontalni
+		p1x = 2
+		p1y = y-2
+		(r,g,b) = pix[p1x,p1y]
+		while(r<(g+b)*citlivost+10):
+			p1y -= 1
+			(r,g,b) = pix[p1x,p1y]
+		dolni_bod = l1y
+
+		#posledni vertikalni
+		p1x = x-2
+		p1y = 2
+		(r,g,b) = pix[p1x,p1y]
+		while(r<(g+b)*citlivost+10):
+			p1x -= 1
+			(r,g,b) = pix[p1x,p1y]
+		pravy_bod = p1x
+		
+		okraj = 5
+		sirka_puvodni = pravy_bod - levy_bod
+		vyska_puvodni = dolni_bod - horni_bod
+		sirka_dilku = sirka_puvodni/columns - 1
+		vyska_dilku = vyska_puvodni/rows - 1
+		for i in range(columns):
+			for j in range(rows):
+#				for k in range(sirka_dilku):
+# 					for l in range(vyska_dilku):
+# 						(r,g,b) = pix[(sirka_puvodni*i)/sirka+k+levy_bod,(vyska_puvodni*j)/vyska+l+horni_bod]
+# 						barva += r+g+b
+# 				a = barva/(3 * sirka_dilku * vyska_dilku)
+				store_set.append(cut(obrazek, pix, (sirka_dilku*i + pravy_bod + okraj, delka_dilku*j + horni_bod + okraj), (sirka_dilku*(i+1) + pravy_bod - okraj, delka_dilku*(j+1) + horni_bod - okraj), [output]))
 
 def cut(obrazek, pix, (left,up), (x,y)):	
 	hranice = 760
